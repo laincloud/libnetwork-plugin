@@ -14,3 +14,4 @@ calicoctl
 *.tar
 *.created
 .go-pkg-cache/
+bin/

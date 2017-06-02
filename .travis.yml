@@ -1,0 +1,22 @@
+sudo: false
+language: go
+go:
+- 1.8.x
+install:
+- go get github.com/Masterminds/glide
+before_script:
+- glide install
+script:
+- mv $GOPATH/src/github.com/laincloud $GOPATH/src/github.com/projectcalico
+- go build -o bin/libnetwork-plugin main.go
+after_success:
+- xz -9k bin/libnetwork-plugin
+deploy:
+  provider: releases
+  api_key:
+    secure: n4RMS4IJdr+RgqvkoUooxTuHyda0ZBepC+FVveV/TVyMWCHp29HY2CgFZAdnTZckfEKsNNbdYJj9nU1XTF4eonuMFwHqMz4dYjp35tkRDLr8Pu4uc6YEqdTzKxjEWMLPP8A0IWgC6susZuBSzdXrsJ292rgKli8TWJNDvBf1h8DHaWKRAqB0JssmxlS/t/8NDwHVQZRIzrMKJM5hFOhZzvYjtVKRPq90aAuZHHR6De75zGJe7z+QkdLy2a8DJPrDQVox1zVIbT1Pu7JZOhtVMN08Xtll63Ic9PO9BXUO7SnR+L1GD3a4XLRHlcAV90RjTFX56eXPCntLGSIyPzgojr1Geyfvb2pi20wE1DiKYIHx4H9aJJlRtItz7ngcY8svKy/U1/AaudxQWHPkI0i3dtlrZLtJm5PQ22J9C8gfqhPtz82HbyuPhSAm+NLNMkRaSsi8D2AdvGwCIJFm1r9XgYMNokkCbJzN1mMVKeHcDUnuOzkswiafqjc6rzO9cjNQbUJk/rA/KeAjd0+NuNPXYpo9/fPissWxk+ZS/mwsUerjtRPc6Ay8d16KtSNH0megS0FAqiI9AwFz6AsMWRvf0k3OeCbysVvMTmHCmURn4y6iVDjXNlvOvei7Cmqcq671SYIFniTSFu7R+N/6+B4InUTc4eUzgpPEJt/46YLvGu0=
+  file:
+  - bin/libnetwork-plugin
+  - bin/libnetwork-plugin.xz
+  on:
+    tags: true
