@@ -4,6 +4,7 @@ go:
 - 1.8.x
 install:
 - go get github.com/Masterminds/glide
+- go get github.com/aliyun/ossutil
 before_script:
 - glide install
 script:
@@ -11,6 +12,9 @@ script:
 - go build -o bin/libnetwork-plugin main.go
 after_success:
 - xz -9k bin/libnetwork-plugin
+- if [ "$TRAVIS_TAG" != "" ]; then
+  ossutil cp bin/libnetwork-plugin.xz oss://lain/binary/libnetwork-plugin/releases/download/${TRAVIS_TAG}/libnetwork-plugin.xz -f -e ${ALIYUN_OSS_ENDPOINT} -i ${ALIYUN_OSS_ACCESS_KEY_ID} -k ${ALIYUN_OSS_ACCESS_KEY_SECRET};
+  fi
 deploy:
   provider: releases
   api_key:
